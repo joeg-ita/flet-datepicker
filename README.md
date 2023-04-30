@@ -9,3 +9,4 @@ Naive flet datepicker
 ---
 
 python version 3.10
+flet 0.6.2

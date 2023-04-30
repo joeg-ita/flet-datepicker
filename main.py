@@ -1,9 +1,10 @@
 import flet as ft
 from date_picker import DatePicker
+from datetime import datetime
 
 def main(page: ft.Page):
 
-    picker = DatePicker()
+    picker = DatePicker(disable_to=datetime.now())
     picker_hm = DatePicker(hour_minute=True)
     selected = ft.Text(value=picker.selected_data)
 
