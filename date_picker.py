@@ -40,9 +40,9 @@ class DatePicker(ft.UserControl):
             first_weekday: int = 0
         ):
         super().__init__()
-        self.selected = None
+        self.selected = selected_date
         self.hour_minute = hour_minute
-        self.now = datetime.now() if not selected_date else selected_date
+        self.now = datetime.now() 
         self.disable_to = disable_to
         self.disable_from  = disable_from
         self.holidays  = holidays
@@ -82,12 +82,19 @@ class DatePicker(ft.UserControl):
             for d in self.days[w]:
 
                 d = datetime(d.year, d.month, d.day, self.hour, self.minute) if self.hour_minute else datetime(d.year, d.month, d.day)
-                dt_weekday = d.weekday()
-                day = d.day
+
+                
                 month = d.month
                 is_main_month = True if month == self.mm else False
-                is_weekend = False
                 
+                if self.hide_prev_next_month_days and not is_main_month:
+                    row.append(ft.Text("", width=36, height=36,))
+                    continue
+
+                dt_weekday = d.weekday()
+                day = d.day
+                is_weekend = False
+
                 is_day_disabled = False
 
                 if self.disable_from and self._trunc_datetime(d) > self._trunc_datetime(self.disable_from):
@@ -148,7 +155,7 @@ class DatePicker(ft.UserControl):
 
         if self.hour_minute:
             hm = self.hour_minute_selector()
-            self.week_rows_controls.append(hm)
+            self.week_rows_controls.append(ft.Row([hm], alignment=ft.MainAxisAlignment.CENTER))
     
     def year_month_selectors(self):
         ym = ft.Row([
