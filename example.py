@@ -8,6 +8,7 @@ class Example(ft.UserControl):
         super().__init__()
 
         self.datepicker = None
+        self.holidays = [datetime(2023, 4, 25), datetime(2023, 5, 1), datetime(2023, 6, 2)]
 
         self.dlg_modal = ft.AlertDialog(
             modal=True,
@@ -45,6 +46,7 @@ class Example(ft.UserControl):
         self.tf1 = ft.TextField(label="Disable days until date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
         self.tf2 = ft.TextField(label="Disable days from date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
         self.c2 = ft.Switch(label="Hide previous and next month days from current", value=False)
+        self.c3 = ft.Switch(label="Shows three months", value=False)
 
     def build(self):
         return ft.Column(
@@ -53,6 +55,7 @@ class Example(ft.UserControl):
             ft.Divider(),
             self.c1,
             self.c2,
+            self.c3,
             ft.Row([self.tf1, self.tf2,]),
             ft.Divider(),
             self.st
@@ -75,7 +78,9 @@ class Example(ft.UserControl):
             selected_date=self.tf.value,
             disable_to=self._to_datetime(self.tf1.value),
             disable_from=self._to_datetime(self.tf2.value),
-            hide_prev_next_month_days=self.c2.value
+            hide_prev_next_month_days=self.c2.value,
+            holidays=self.holidays,
+            show_three_months=self.c3.value
             )
         self.page.dialog = self.dlg_modal
         self.dlg_modal.content = self.datepicker
