@@ -107,7 +107,9 @@ class DatePicker(ft.UserControl):
                 if self.disable_to and self._trunc_datetime(d) < self._trunc_datetime(self.disable_to):
                     is_day_disabled = True
                 
-                text_color = None    
+                text_color = None   
+                border_side = None 
+                bg = None
                 # week end bg color
                 if dt_weekday in self.WEEKEND_DAYS:
                     text_color = ft.colors.RED_500
@@ -119,8 +121,7 @@ class DatePicker(ft.UserControl):
 
                 # current day bg
                 if is_main_month and day == self.dd and self.dd == today.day and self.mm == today.month and self.yy == today.year:
-                    bg = ft.colors.BLUE
-                    text_color = ft.colors.WHITE
+                    border_side = ft.BorderSide(1.5, ft.colors.BLUE)
                 elif (is_weekend or is_holiday) and (not is_main_month or is_day_disabled):
                     text_color = ft.colors.RED_200
                     bg = None
@@ -135,7 +136,7 @@ class DatePicker(ft.UserControl):
 
                 # selected day 
                 if  self.selected and self.selected == d:
-                    bg = ft.colors.GREEN
+                    bg = ft.colors.BLUE
                     text_color = ft.colors.WHITE             
                 
                 row.append(
@@ -151,7 +152,8 @@ class DatePicker(ft.UserControl):
                             padding=0, 
                             shape={
                                 ft.MaterialState.DEFAULT: ft.RoundedRectangleBorder(radius=20),
-                            }
+                            },
+                            side=border_side
                         ), 
                     on_click=self._select_date) 
                 )
