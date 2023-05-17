@@ -1,8 +1,7 @@
-from typing import List
+import locale as loc
 import flet as ft 
 import calendar
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 class DatePicker(ft.UserControl):
 
@@ -35,13 +34,14 @@ class DatePicker(ft.UserControl):
 
     def __init__(self, 
             hour_minute: bool = False, 
-            selected_date: datetime = None,
+            selected_date: datetime | tuple[datetime, datetime | None] = None,
             disable_to: datetime = None, 
             disable_from: datetime = None,
-            holidays: List[datetime] = None,
+            holidays: list[datetime] = None,
             hide_prev_next_month_days: bool = False,
             first_weekday: int = 0,
-            show_three_months: bool = False
+            show_three_months: bool = False,
+            locale: str = None
         ):
         super().__init__()
         self.selected = selected_date
@@ -52,6 +52,7 @@ class DatePicker(ft.UserControl):
         self.hide_prev_next_month_days = hide_prev_next_month_days
         self.first_weekday = first_weekday
         self.show_three_months = show_three_months
+        if locale: loc.setlocale(loc.LC_ALL, locale)
 
         self.now = datetime.now()
         self.yy = self.now.year 
