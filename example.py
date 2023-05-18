@@ -9,6 +9,12 @@ class Example(ft.UserControl):
 
         self.datepicker = None
         self.holidays = [datetime(2023, 4, 25), datetime(2023, 5, 1), datetime(2023, 6, 2)]
+        self.locales = ["en_US", "fr_FR", "it_IT", "es_ES"]
+        self.selected_locale = None
+
+        self.locales_opts = []
+        for l in self.locales:
+            self.locales_opts.append(ft.dropdown.Option(l))
 
         self.dlg_modal = ft.AlertDialog(
             modal=True,
@@ -26,7 +32,7 @@ class Example(ft.UserControl):
             icon=ft.icons.CALENDAR_MONTH, 
             on_click=self.open_dlg_modal, 
             height=40,
-            width=48,
+            width=40,
             right=0,
             style=ft.ButtonStyle(
                 padding=ft.Padding(4,0,0,0),
@@ -42,28 +48,46 @@ class Example(ft.UserControl):
             ]
         )
 
+        self.c0 = ft.Switch(label="Select From - To date", value=False)
         self.c1 = ft.Switch(label="With hours and minutes", value=False)
         self.tf1 = ft.TextField(label="Disable days until date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
         self.tf2 = ft.TextField(label="Disable days from date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
         self.c2 = ft.Switch(label="Hide previous and next month days from current", value=False)
         self.c3 = ft.Switch(label="Shows three months", value=False)
 
+        self.dd = ft.Dropdown(
+            label="Locale",
+            width=200,
+            options=self.locales_opts,
+            dense=True,
+            on_change=self.set_locale
+        )
+
+        self.from_to_text = ft.Text(visible=False)
+
     def build(self):
         return ft.Column(
             [
             ft.Text("Datepicker options", size=24),
             ft.Divider(),
+            self.c0,
             self.c1,
             self.c2,
             self.c3,
             ft.Row([self.tf1, self.tf2,]),
+            self.dd,
             ft.Divider(),
-            self.st
+            self.st,
+            self.from_to_text
             ]
         )
     
     def confirm_dlg(self, e):
-        self.tf.value = self.datepicker.selected_data
+        if type(self.datepicker.selected_data) == datetime:
+            self.tf.value = self.datepicker.selected_data
+        else:
+            self.from_to_text.value = f"{self.datepicker.selected_data[0]} - {self.datepicker.selected_data[1]}"
+            self.from_to_text.visible = True
         self.dlg_modal.open = False
         self.update()
         self.page.update()
@@ -76,11 +100,13 @@ class Example(ft.UserControl):
         self.datepicker = DatePicker(
             hour_minute=self.c1.value,
             selected_date=self.tf.value,
+            select_from_to=self.c0.value,
             disable_to=self._to_datetime(self.tf1.value),
             disable_from=self._to_datetime(self.tf2.value),
             hide_prev_next_month_days=self.c2.value,
             holidays=self.holidays,
-            show_three_months=self.c3.value
+            show_three_months=self.c3.value,
+            locale=self.selected_locale
             )
         self.page.dialog = self.dlg_modal
         self.dlg_modal.content = self.datepicker
@@ -92,3 +118,6 @@ class Example(ft.UserControl):
             return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
         else:
             return None
+        
+    def set_locale(self, e):
+        self.selected_locale = self.dd.value if self.dd.value else None
