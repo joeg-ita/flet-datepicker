@@ -31,8 +31,12 @@ class DatePicker(ft.UserControl):
 
     WEEKEND_DAYS = [5, 6]
 
-    CELL_SIZE = 34
+    CELL_SIZE = 32
     LAYOUT_WIDTH = 340
+    LAYOUT_MIN_HEIGHT = 280
+    LAYOUT_MAX_HEIGHT = 320
+    LAYOUT_DT_MIN_HEIGHT = 320
+    LAYOUT_DT_MAX_HEIGHT = 360
 
     def __init__(self, 
             hour_minute: bool = False, 
@@ -127,7 +131,7 @@ class DatePicker(ft.UserControl):
 
                 # current day bg
                 if is_main_month and day == self.dd and self.dd == today.day and self.mm == today.month and self.yy == today.year:
-                    border_side = ft.BorderSide(1.5, ft.colors.BLUE)
+                    border_side = ft.BorderSide(2, ft.colors.BLUE)
                 elif (is_weekend or is_holiday) and (not is_main_month or is_day_disabled):
                     text_color = ft.colors.RED_200
                     bg = None
@@ -140,14 +144,14 @@ class DatePicker(ft.UserControl):
                 else:
                     bg = None
 
-                # selected day 
+                # selected days 
                 if  (self.selected and self.selected == d) or (self.selected_to and self.selected_to == d):
                     bg = ft.colors.BLUE_400
                     text_color = ft.colors.WHITE 
 
                 if self.is_from_to and self.selected and self.selected_to:
                     if d > self.selected and d < self.selected_to:
-                        bg = ft.colors.BLUE_400
+                        bg = ft.colors.BLUE_300
                         text_color = ft.colors.WHITE 
                 
                 row.append(
@@ -180,10 +184,10 @@ class DatePicker(ft.UserControl):
         return week_rows_controls
     
     def _year_month_selectors(self, year, month, hide_ymhm = False):
-        prev_year = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text("", height=self.CELL_SIZE,)
-        next_year = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text("")
-        prev_month = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text("")
-        next_month = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text("")
+        prev_year = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY, height=self.CELL_SIZE,)
+        next_year = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
+        prev_month = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
+        next_month = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
         ym = ft.Row([
                     ft.Row([
                         prev_year,
@@ -192,7 +196,7 @@ class DatePicker(ft.UserControl):
                     ], spacing=0),
                     ft.Row([
                         prev_month,
-                        ft.Text(calendar.month_name[month], text_align='center'),
+                        ft.Text(calendar.month_name[month], text_align=ft.alignment.center),
                         next_month,
                     ], spacing=0),
                 ], spacing=0, alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
@@ -368,9 +372,9 @@ class DatePicker(ft.UserControl):
 
     def _cal_height(self, weeks_number):
         if self.hour_minute:
-            return 360 if weeks_number == 5 else 400
+            return self.LAYOUT_DT_MIN_HEIGHT if weeks_number == 5 else self.LAYOUT_DT_MAX_HEIGHT
         else:
-            return 300 if weeks_number == 5 else 340
+            return self.LAYOUT_MIN_HEIGHT if weeks_number == 5 else self.LAYOUT_MAX_HEIGHT
         
     def _trunc_datetime(self, date):
         return date.replace(hour=0, minute=0, second=0, microsecond=0)

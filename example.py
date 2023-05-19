@@ -24,7 +24,8 @@ class Example(ft.UserControl):
                 ft.TextButton("Confirm", on_click=self.confirm_dlg),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
-            on_dismiss=lambda e: print("Modal dialog dismissed!"),
+            actions_padding=5,
+            content_padding=0
         )
 
         self.tf = ft.TextField(label="Select Date", dense=True, hint_text="yyyy-mm-ddThh:mm:ss", width=260, height=40)
