@@ -3,12 +3,12 @@ import flet as ft
 import calendar
 from datetime import datetime, timedelta
 
+from datepicker.selection_type import SelectionType
+
 class DatePicker(ft.UserControl):
 
     @property
     def selected_data(self):
-        if self.is_from_to:
-            return self.selected, self.selected_to
         return self.selected
     
     PREV_MONTH = "PM"
@@ -40,8 +40,8 @@ class DatePicker(ft.UserControl):
 
     def __init__(self, 
             hour_minute: bool = False, 
-            selected_date: datetime | tuple[datetime, datetime | None] = None,
-            select_from_to: bool=True,
+            selected_date: list[datetime] | None = None,
+            selection_type: SelectionType | int = SelectionType.SINGLE,
             disable_to: datetime = None, 
             disable_from: datetime = None,
             holidays: list[datetime] = None,
@@ -51,8 +51,9 @@ class DatePicker(ft.UserControl):
             locale: str = None
         ):
         super().__init__()
-        self.selected = selected_date
-        self.is_from_to = select_from_to and not hour_minute
+        self.selected = selected_date if selected_date else []
+        print(selection_type)
+        self.selection_type = selection_type if not type(int) else SelectionType.from_value(selection_type)
         self.hour_minute = hour_minute
         self.disable_to = disable_to
         self.disable_from  = disable_from
@@ -62,13 +63,12 @@ class DatePicker(ft.UserControl):
         self.show_three_months = show_three_months
         if locale: loc.setlocale(loc.LC_ALL, locale)
 
-        self.selected_to = None
         self.now = datetime.now()
         self.yy = self.now.year 
         self.mm = self.now.month 
         self.dd = self.now.day
-        self.hour = self.now.hour if not selected_date else selected_date.hour
-        self.minute = self.now.minute if not selected_date else selected_date.minute
+        self.hour = self.now.hour
+        self.minute = self.now.minute
         self.cal = calendar.Calendar(first_weekday)
 
     def _get_current_month(self, year, month):
@@ -145,12 +145,18 @@ class DatePicker(ft.UserControl):
                     bg = None
 
                 # selected days 
-                if  (self.selected and self.selected == d) or (self.selected_to and self.selected_to == d):
-                    bg = ft.colors.BLUE_400
-                    text_color = ft.colors.WHITE 
+                selected_numbers = len(self.selected)
+                if (self.selection_type != SelectionType.RANGE):
+                    if selected_numbers > 0 and d in self.selected:
+                        bg = ft.colors.BLUE_400
+                        text_color = ft.colors.WHITE 
+                else:
+                    if  selected_numbers > 0 and selected_numbers < 3 and d in self.selected:
+                        bg = ft.colors.BLUE_400
+                        text_color = ft.colors.WHITE
 
-                if self.is_from_to and self.selected and self.selected_to:
-                    if d > self.selected and d < self.selected_to:
+                if self.selection_type == SelectionType.RANGE and selected_numbers > 1:
+                    if d > self.selected[0] and d < self.selected[-1]:
                         bg = ft.colors.BLUE_300
                         text_color = ft.colors.WHITE 
                 
@@ -303,30 +309,38 @@ class DatePicker(ft.UserControl):
         print(result)
         print(self.selected)
 
-        if self.is_from_to:
-            if self.selected and self.selected_to:
-                self.selected = self.selected_to = None
+        if self.selection_type == SelectionType.RANGE:
+            if len(self.selected) == 2:
+                self.selected = []
 
-            if self.selected and self.selected is not None:
-                if self.selected == result:
-                    self.selected = None 
+            if len(self.selected) > 0:
+                if self.selected[0] == result:
+                    self.selected = [] 
                 else:
-                    if result > self.selected:
-                        if self.selected_to is None:
-                            self.selected_to = result   
+                    if result > self.selected[0]:
+                        if len(self.selected) == 1:
+                            self.selected.append(result)   
                         else:
                             return
                     else:
                         return
             else:
-                self.selected = result        
-        else:
-            if self.selected and self.selected == result:
-                self.selected = None
+                self.selected.append(result)        
+        elif self.selection_type == SelectionType.MULTIPLE:
+            if len(self.selected) > 0 and result in self.selected:
+                self.selected.remove(result)
             else:
                 if self.hour_minute:
                     result = datetime(result.year, result.month, result.day, self.hour, self.minute)
-                self.selected = result
+                self.selected.append(result)
+        else:
+            if len(self.selected) == 1 and result in self.selected:
+                self.selected.remove(result)
+            else:
+                self.selected = []
+                if self.hour_minute:
+                    result = datetime(result.year, result.month, result.day, self.hour, self.minute)
+                self.selected.append(result)
 
         self._update_calendar()
 
@@ -378,3 +392,4 @@ class DatePicker(ft.UserControl):
         
     def _trunc_datetime(self, date):
         return date.replace(hour=0, minute=0, second=0, microsecond=0)
+    

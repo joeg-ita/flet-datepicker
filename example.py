@@ -1,5 +1,6 @@
 import flet as ft
-from date_picker import DatePicker
+from datepicker.datepicker import DatePicker
+from datepicker.selection_type import SelectionType
 from datetime import datetime
 
 class Example(ft.UserControl):
@@ -49,7 +50,14 @@ class Example(ft.UserControl):
             ]
         )
 
-        self.c0 = ft.Switch(label="Select From - To date", value=False)
+        self.cg = ft.RadioGroup(content=ft.Row(
+            [
+                ft.Text("Selction Type"),
+                ft.Radio(value=SelectionType.SINGLE.value, label=SelectionType.SINGLE.name),
+                ft.Radio(value=SelectionType.RANGE.value, label=SelectionType.RANGE.name),
+                ft.Radio(value=SelectionType.MULTIPLE.value, label=SelectionType.MULTIPLE.name)
+            ]), value=SelectionType.SINGLE.value
+        )
         self.c1 = ft.Switch(label="With hours and minutes", value=False)
         self.tf1 = ft.TextField(label="Disable days until date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
         self.tf2 = ft.TextField(label="Disable days from date", dense=True, hint_text="yyyy-mm-dd hh:mm:ss", width=260, height=40)
@@ -71,7 +79,7 @@ class Example(ft.UserControl):
             [
             ft.Text("Datepicker options", size=24),
             ft.Divider(),
-            self.c0,
+            self.cg,
             self.c1,
             self.c2,
             self.c3,
@@ -84,10 +92,13 @@ class Example(ft.UserControl):
         )
     
     def confirm_dlg(self, e):
-        if type(self.datepicker.selected_data) == datetime:
-            self.tf.value = self.datepicker.selected_data
-        else:
-            self.from_to_text.value = f"{self.datepicker.selected_data[0]} - {self.datepicker.selected_data[1]}"
+        if int(self.cg.value) == SelectionType.SINGLE.value:
+            self.tf.value = self.datepicker.selected_data[0] if len(self.datepicker.selected_data) > 0 else None
+        elif int(self.cg.value) == SelectionType.MULTIPLE.value and len(self.datepicker.selected_data) > 0:
+            self.from_to_text.value = f"{[d.isoformat() for d in self.datepicker.selected_data]}"
+            self.from_to_text.visible = True
+        elif int(self.cg.value) == SelectionType.RANGE.value and len(self.datepicker.selected_data) > 0:
+            self.from_to_text.value = f"From: {self.datepicker.selected_data[0]} To: {self.datepicker.selected_data[1]}"
             self.from_to_text.visible = True
         self.dlg_modal.open = False
         self.update()
@@ -100,8 +111,8 @@ class Example(ft.UserControl):
     def open_dlg_modal(self, e):
         self.datepicker = DatePicker(
             hour_minute=self.c1.value,
-            selected_date=self.tf.value,
-            select_from_to=self.c0.value,
+            selected_date=[self.tf.value] if self.tf.value else None,
+            selection_type=int(self.cg.value),
             disable_to=self._to_datetime(self.tf1.value),
             disable_from=self._to_datetime(self.tf2.value),
             hide_prev_next_month_days=self.c2.value,
