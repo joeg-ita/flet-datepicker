@@ -13,29 +13,35 @@ features:
 
 ---
 
-Datepicker 
-![date picker](assets/datepicker.png)
+**Datepicker** 
+- ![date picker](assets/datepicker.png)
 
-Datetimepicker
-![datetime picker](assets/datetimepicker.png)
+**Datetimepicker**
 
-Datepicker selection range
-![datetime picker Range](assets/datepicker_range.png)
+- ![datetime picker](assets/datetimepicker.png)
 
-Datepicker selection multiple
-![datetime picker Multiple](assets/datepicker_multiple.png)
+**Range selection**
 
-Datepicker show 3 months
-![datetime picker 3 months](assets/datepicker_3_months.png)
+- ![datetime picker Range](assets/datepicker_range.png)
 
-Datepicker with disabled dates
-![datetime picker Disabled dates](assets/datepicker_disabled_dates.png)
+**Multiple selection**
 
-Datepicker with prev/next month days hidden
-![datetime picker hide prev/next month](assets/datepicker_hide_prev_next_month.png)
+- ![datetime picker Multiple](assets/datepicker_multiple.png)
 
-Datepicker with locale
-![datetime picker locale](assets/datepicker_locale.png)
+**Show 3 months**
+
+- ![datetime picker 3 months](assets/datepicker_3_months.png)
+
+**Disabled dates**
+
+- ![datetime picker Disabled dates](assets/datepicker_disabled_dates.png)
+
+**prev/next month days hidden**
+
+- ![datetime picker hide prev/next month](assets/datepicker_hide_prev_next_month.png)
+
+**locale**
+- ![datetime picker locale](assets/datepicker_locale.png)
 
 ---
 
