@@ -24,7 +24,6 @@ class DatePicker(ft.UserControl):
     EMPTY = ""
     WHITE_SPACE = " "
 
-    DELTA_MONTH_WEEK = 5
     DELTA_YEAR_WEEK = 52
     DELTA_HOUR = 1
     DELTA_MINUTE = 1
@@ -297,7 +296,7 @@ class DatePicker(ft.UserControl):
         return rows
 
     def _prev_next_month(self, year, month):
-        delta = timedelta(weeks=self.DELTA_MONTH_WEEK)
+        delta = timedelta(days=calendar.monthrange(year, month)[1])
         current = datetime(year, month, 15)
         prev = current - delta
         next = current + delta
@@ -349,7 +348,7 @@ class DatePicker(ft.UserControl):
         print(self.yy, self.mm)
 
         if(e.control.data == self.PREV_MONTH or e.control.data == self.NEXT_MONTH):
-            delta = timedelta(weeks=self.DELTA_MONTH_WEEK)
+            delta = timedelta(days=calendar.monthrange(self.yy, self.mm)[1])
         if(e.control.data == self.PREV_YEAR or e.control.data == self.NEXT_YEAR):
             delta = timedelta(weeks=self.DELTA_YEAR_WEEK)
 
