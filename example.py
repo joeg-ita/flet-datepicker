@@ -19,12 +19,14 @@ class Example(ft.UserControl):
 
         self.dlg_modal = ft.AlertDialog(
             modal=True,
-            title=ft.Text("Date picker"),
+            title=ft.Text("Select Date"),
             actions=[
-                ft.TextButton("Cancel", on_click=self.cancel_dlg),
-                ft.TextButton("Confirm", on_click=self.confirm_dlg),
+                ft.Row([
+                    ft.Row([ft.IconButton(icon=ft.icons.SETTINGS_OUTLINED),]),
+                    ft.Row([ft.TextButton("Cancel", on_click=self.cancel_dlg),ft.TextButton("Confirm", on_click=self.confirm_dlg),]),
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
             ],
-            actions_alignment=ft.MainAxisAlignment.END,
+            actions_alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             actions_padding=5,
             content_padding=0
         )
@@ -92,17 +94,19 @@ class Example(ft.UserControl):
         )
     
     def confirm_dlg(self, e):
-        if int(self.cg.value) == SelectionType.SINGLE.value:
-            self.tf.value = self.datepicker.selected_data[0] if len(self.datepicker.selected_data) > 0 else None
-        elif int(self.cg.value) == SelectionType.MULTIPLE.value and len(self.datepicker.selected_data) > 0:
-            self.from_to_text.value = f"{[d.isoformat() for d in self.datepicker.selected_data]}"
-            self.from_to_text.visible = True
-        elif int(self.cg.value) == SelectionType.RANGE.value and len(self.datepicker.selected_data) > 0:
-            self.from_to_text.value = f"From: {self.datepicker.selected_data[0]} To: {self.datepicker.selected_data[1]}"
-            self.from_to_text.visible = True
         self.dlg_modal.open = False
         self.update()
         self.page.update()
+    
+    def update_result(self, selected_data):
+        if int(self.cg.value) == SelectionType.SINGLE.value:
+            self.tf.value = selected_data[0] if len(selected_data) > 0 else None
+        elif int(self.cg.value) == SelectionType.MULTIPLE.value and len(selected_data) > 0:
+            self.from_to_text.value = f"{[d.isoformat() for d in selected_data]}"
+            self.from_to_text.visible = True
+        elif int(self.cg.value) == SelectionType.RANGE.value and len(selected_data) > 0:
+            self.from_to_text.value = f"From: {selected_data[0]} To: {selected_data[1]}"
+            self.from_to_text.visible = True
     
     def cancel_dlg(self, e):
         self.dlg_modal.open = False
@@ -118,7 +122,8 @@ class Example(ft.UserControl):
             hide_prev_next_month_days=self.c2.value,
             holidays=self.holidays,
             show_three_months=self.c3.value,
-            locale=self.selected_locale
+            locale=self.selected_locale,
+            on_change=self.update_result
             )
         self.page.dialog = self.dlg_modal
         self.dlg_modal.content = self.datepicker

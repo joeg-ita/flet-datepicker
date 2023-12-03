@@ -47,7 +47,8 @@ class DatePicker(ft.UserControl):
             hide_prev_next_month_days: bool = False,
             first_weekday: int = 0,
             show_three_months: bool = False,
-            locale: str = None
+            locale: str = None,
+            on_change: callable = None
         ):
         super().__init__()
         self.selected = selected_date if selected_date else []
@@ -56,11 +57,12 @@ class DatePicker(ft.UserControl):
         self.hour_minute = hour_minute
         self.disable_to = disable_to
         self.disable_from  = disable_from
-        self.holidays  = holidays
+        self.holidays = holidays
         self.hide_prev_next_month_days = hide_prev_next_month_days
         self.first_weekday = first_weekday
         self.show_three_months = show_three_months
         if locale: loc.setlocale(loc.LC_ALL, locale)
+        self.on_change = on_change or (lambda x: None)
 
         self.now = datetime.now()
         self.yy = self.now.year 
@@ -69,6 +71,9 @@ class DatePicker(ft.UserControl):
         self.hour = self.now.hour
         self.minute = self.now.minute
         self.cal = calendar.Calendar(first_weekday)
+
+    def _on_change(self, e) -> None:
+        self.on_change(e)
 
     def _get_current_month(self, year, month):
         return self.cal.monthdatescalendar(year, month)
@@ -341,6 +346,7 @@ class DatePicker(ft.UserControl):
                     result = datetime(result.year, result.month, result.day, self.hour, self.minute)
                 self.selected.append(result)
 
+        self._on_change(self.selected)
         self._update_calendar()
 
     def _adjust_calendar(self, e: ft.ControlEvent):
