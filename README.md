@@ -10,6 +10,7 @@ features:
 - holidays
 - first day of week
 - select datetime
+- on_change result callback
 
 ---
 
@@ -46,4 +47,4 @@ features:
 ---
 
 python version 3.10
-flet 0.7.1
+flet 0.14.0
