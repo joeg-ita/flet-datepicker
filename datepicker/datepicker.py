@@ -195,19 +195,19 @@ class DatePicker(ft.UserControl):
         return week_rows_controls
     
     def _year_month_selectors(self, year, month, hide_ymhm = False):
-        prev_year = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY, height=self.CELL_SIZE,)
-        next_year = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_YEAR, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
-        prev_month = ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
-        next_month = ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_MONTH, on_click=self._adjust_calendar) if not hide_ymhm else ft.Text(self.EMPTY)
+        prev_year = ft.IconButton(icon=ft.icons.ARROW_BACK_IOS_NEW, data=self.PREV_YEAR, on_click=self._adjust_calendar, icon_color=ft.colors.BLACK54) if not hide_ymhm else ft.Text(self.EMPTY, height=self.CELL_SIZE,)
+        next_year = ft.IconButton(icon=ft.icons.ARROW_FORWARD_IOS, data=self.NEXT_YEAR, on_click=self._adjust_calendar, icon_color=ft.colors.BLACK54) if not hide_ymhm else ft.Text(self.EMPTY)
+        prev_month = ft.IconButton(icon=ft.icons.ARROW_BACK_IOS_NEW, data=self.PREV_MONTH, on_click=self._adjust_calendar, icon_color=ft.colors.BLACK54) if not hide_ymhm else ft.Text(self.EMPTY)
+        next_month = ft.IconButton(icon=ft.icons.ARROW_FORWARD_IOS, data=self.NEXT_MONTH, on_click=self._adjust_calendar, icon_color=ft.colors.BLACK54) if not hide_ymhm else ft.Text(self.EMPTY)
         ym = ft.Row([
                     ft.Row([
                         prev_year,
-                        ft.Text(year),
+                        ft.Text(year, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_400),
                         next_year,
                     ], spacing=0),
                     ft.Row([
                         prev_month,
-                        ft.Text(calendar.month_name[month], text_align=ft.alignment.center),
+                        ft.Text(calendar.month_name[month], text_align=ft.alignment.center, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_400),
                         next_month,
                     ], spacing=0),
                 ], spacing=0, alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
@@ -242,15 +242,15 @@ class DatePicker(ft.UserControl):
         hm = ft.Row(
             [
                 ft.Row([
-                    ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_HOUR, on_click=self._adjust_hh_min),
-                    ft.Text(hour),
-                    ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_HOUR, on_click=self._adjust_hh_min),
+                    ft.IconButton(icon=ft.icons.ARROW_BACK_IOS_NEW, data=self.PREV_HOUR, on_click=self._adjust_hh_min, icon_color=ft.colors.BLACK54),
+                    ft.Text(hour, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_400),
+                    ft.IconButton(icon=ft.icons.ARROW_FORWARD_IOS, data=self.NEXT_HOUR, on_click=self._adjust_hh_min, icon_color=ft.colors.BLACK54),
                 ]),
                 ft.Text(":"),
                 ft.Row([
-                    ft.IconButton(icon=ft.icons.ARROW_BACK, data=self.PREV_MINUTE, on_click=self._adjust_hh_min),
-                    ft.Text(minute),
-                    ft.IconButton(icon=ft.icons.ARROW_FORWARD, data=self.NEXT_MINUTE, on_click=self._adjust_hh_min),
+                    ft.IconButton(icon=ft.icons.ARROW_BACK_IOS_NEW, data=self.PREV_MINUTE, on_click=self._adjust_hh_min, icon_color=ft.colors.BLACK54),
+                    ft.Text(minute, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_400),
+                    ft.IconButton(icon=ft.icons.ARROW_FORWARD_IOS, data=self.NEXT_MINUTE, on_click=self._adjust_hh_min, icon_color=ft.colors.BLACK54),
                 ]),
             ], spacing=48, alignment=ft.MainAxisAlignment.SPACE_EVENLY)
                 
