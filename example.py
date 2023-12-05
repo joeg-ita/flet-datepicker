@@ -22,7 +22,9 @@ class Example(ft.UserControl):
             title=ft.Text("Select Date"),
             actions=[
                 ft.Row([
-                    ft.Row([ft.IconButton(icon=ft.icons.SETTINGS_OUTLINED),]),
+                    ft.Row([
+                        # ft.IconButton(icon=ft.icons.SETTINGS_OUTLINED),
+                        ]),
                     ft.Row([ft.TextButton("Cancel", on_click=self.cancel_dlg),ft.TextButton("Confirm", on_click=self.confirm_dlg),]),
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
             ],
@@ -104,7 +106,7 @@ class Example(ft.UserControl):
         elif int(self.cg.value) == SelectionType.MULTIPLE.value and len(selected_data) > 0:
             self.from_to_text.value = f"{[d.isoformat() for d in selected_data]}"
             self.from_to_text.visible = True
-        elif int(self.cg.value) == SelectionType.RANGE.value and len(selected_data) > 0:
+        elif int(self.cg.value) == SelectionType.RANGE.value and len(selected_data) == 2:
             self.from_to_text.value = f"From: {selected_data[0]} To: {selected_data[1]}"
             self.from_to_text.visible = True
     
